@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+function setup_jenv() {
+  local sbinaries=$(slist JavaVM)
+  local binaries="jenv $sbinaries"
+
+  for binary in $binaries; do
+    source /dev/stdin <<EOF
+function ${binary}() {
+  for t in ${binaries}; do
+    unset -f "\$t";
+  done
+
+  if which jenv > /dev/null; then
+    eval "\$(jenv init -)"
+  fi
+
+  ${binary} "\$@"
+}
+EOF
+  done
+
+  unset -f "setup_jenv"
+}
+
+setup_jenv

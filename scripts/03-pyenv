@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+function setup_pyenv() {
+  local binaries=$(slist python)
+
+  for tool in python@2 python3 pyenv pyenv-virtualenvwrapper; do
+    binaries="$(blist $tool) $binaries"
+  done
+  
+  for binary in $binaries; do
+    source /dev/stdin <<EOF
+function ${binary}() {
+  for t in ${binaries}; do
+    unset -f "\$t";
+  done
+
+  # https://hackercodex.com/guide/python-development-environment-on-mac-osx/
+  export PIP_REQUIRE_VIRTUALENV=true
+  function gpip() {
+    PIP_REQUIRE_VIRTUALENV="" pip "\$@";
+  }
+
+  # pyenv
+  if which pyenv > /dev/null; then
+    eval "\$(pyenv init -)";
+  fi
+
+  # https://github.com/yyuu/pyenv-virtualenvwrapper#using-pyvenv-instead-of-virtualenv
+  export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+
+  $binary "\$@";
+}
+EOF
+  done
+
+  unset -f "setup_pyenv"
+}
+
+setup_pyenv

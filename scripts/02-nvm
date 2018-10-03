@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+function setup_nvm() {
+  local binaries="npm nvm $(blist node)"
+
+  for binary in $binaries; do
+    source /dev/stdin <<EOF
+function ${binary}() {
+  for t in ${binaries}; do
+    unset -f "\$t";
+  done
+
+  export NVM_DIR="$HOME/.nvm"
+  [[ -s "\$NVM_DIR/nvm.sh" ]] && source "\$NVM_DIR/nvm.sh"
+  [[ -s "\$NVM_DIR/bash_completion" ]] && \. "\$NVM_DIR/bash_completion"
+
+  $binary "\$@";
+}
+EOF
+  done
+
+  unset -f "setup_nvm"
+}
+
+setup_nvm

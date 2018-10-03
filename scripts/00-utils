@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+function blist() {
+  local BREW_DIR="/usr/local/Cellar"
+  local tool="$1"
+
+  ls ${BREW_DIR}/${tool}/**/bin 2>/dev/null | \
+    grep -v '.*:$' | \
+    sort -u | \
+    xargs echo
+}
+
+function slist() {
+  local MAC_DIR="/System/Library/Frameworks"
+  local name="$1"
+  name="$(tr '[:lower:]' '[:upper:]' <<< ${name:0:1})${name:1}"
+
+  local prefix="${MAC_DIR}/${name}.framework/Versions/Current"
+  local paths="${prefix}/bin ${prefix}/usr/bin ${prefix}/Commands"
+
+  ls $paths 2>/dev/null | grep -v '.*:$' | sort -u | xargs echo
+}

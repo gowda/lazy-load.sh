@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+function setup_rvm() {
+  local sbinaries=$(slist ruby)
+  local binaries="rvm $sbinaries"
+
+  for binary in $binaries; do
+    source /dev/stdin <<EOF
+function ${binary}() {
+  for t in ${binaries}; do
+    unset -f "\$t";
+  done
+
+  [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm";
+
+  $binary "\$@";
+}
+EOF
+  done
+
+  unset -f "setup_rvm"
+}
+
+setup_rvm

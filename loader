@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null && pwd)"
+CONFIG_DIR="${SOURCE_DIR}/scripts"
+
+for config in $(ls $CONFIG_DIR | grep -v -E '.*~$|.*.disabled$' | sort -u | xargs echo); do
+  source "$CONFIG_DIR/$config"
+done
