@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 function setup_pyenv() {
   local binaries=$(slist python)
 

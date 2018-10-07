@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 function blist() {
   local BREW_DIR="/usr/local/Cellar"
   local tool="$1"
